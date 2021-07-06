@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	patterns "github.com/st-obor/go-patterns/pkg"
 	"gitlab.com/gomidi/midi/writer"
 )
 
@@ -32,6 +33,10 @@ func inSlice(needle int, haystack []int) bool {
 }
 
 func main() {
+
+	pattern, _ := patterns.NewEuclid(4, 16, 0, 0)
+
+	fmt.Println(pattern)
 
 	// Setup mode
 	allowedNotes := []int{
@@ -61,9 +66,9 @@ func main() {
 	max := 100
 	for track := range matrix {
 		for beat := range matrix[track] {
-			for midiNote := range matrix[track][beat] {
-				if inSlice(midiNote, allowedNotes) {
-					if (rand.Intn(max-min+1) + min) >= 98 {
+			if pattern.Rhythm[beat%len(pattern.Rhythm)] == 1 {
+				for midiNote := range matrix[track][beat] {
+					if (rand.Intn(max-min+1)+min) >= 98 && inSlice(midiNote, allowedNotes) {
 						matrix[track][beat][midiNote] = 1 // Set note to "on"
 					}
 				}
